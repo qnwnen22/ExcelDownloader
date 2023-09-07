@@ -22,9 +22,9 @@ namespace ExcelDownloader
         private void testToolStripMenuItem_Click(object sender, EventArgs e)
         {
             this.testToolStripMenuItem.Enabled = false;
-            var json2 = File.ReadAllText(@"D:\uploadProduct_list.txt");
-            Task task = DownloadExcel(json2);
-            task.Start();
+            var json2 = File.ReadAllText(@"D:\product.txt");
+            var excelConvertor = new ExcelConvertor();
+            excelConvertor.DownloadExcel(json2);
         }
 
         private void test2ToolStripMenuItem_Click(object sender, EventArgs e)
@@ -101,7 +101,6 @@ namespace ExcelDownloader
                             Header header = Add(property.Name, getDepth1, width);
                             parent.Headers.Add(header);
                             width++;
-                            Console.WriteLine($"{property.Name} : {width} / {getDepth1}");
 
                             if (result < getDepth1)
                             {
@@ -119,11 +118,14 @@ namespace ExcelDownloader
                 case JTokenType.Array:
                     int currentDepth = result;
                     JToken[] array = jToken.ToArray();
-                    JToken first = array.First();
-                    var getDepth2 = GetMaxDepth(parent, first, currentDepth);
-                    if (result < getDepth2)
+                    if (array != null && array.Length > 0)
                     {
-                        result = getDepth2;
+                        JToken first = array.First();
+                        var getDepth2 = GetMaxDepth(parent, first, currentDepth);
+                        if (result < getDepth2)
+                        {
+                            result = getDepth2;
+                        }
                     }
                     break;
                 default:
@@ -147,7 +149,6 @@ namespace ExcelDownloader
             if (header.Headers.Count == 0)
             {
                 range = ws.Range[ws.Cells[header.Row, header.Column], ws.Cells[maxDepth, header.Column]];
-
             }
             else
             {
@@ -180,30 +181,23 @@ namespace ExcelDownloader
 
             for (int i = 0; i < properties.Count; i++)
             {
-                try
+                JProperty property = properties[i];
+                width++;
+
+                JToken jToken = property.Value;
+                Header header = Add(property.Name, 1, width);
+                Headers.Add(header);
+
+                var depth = 1;
+                if (jToken.HasValues)
                 {
-                    JProperty property = properties[i];
-                    width++;
-
-                    JToken jToken = property.Value;
-                    Header header = Add(property.Name, 1, width);
-                    Headers.Add(header);
-
-                    var depth = 1;
-                    if (jToken.HasValues)
+                    depth = GetMaxDepth(header, jToken);
+                    if (maxDepth < depth)
                     {
-                        depth = GetMaxDepth(header, jToken);
-                        if (maxDepth < depth)
-                        {
-                            maxDepth = depth;
-                        }
+                        maxDepth = depth;
                     }
+                }
 
-                }
-                catch (Exception exception)
-                {
-                    Console.WriteLine(exception.Message);
-                }
             }
 
             foreach (Header item in Headers)
@@ -249,7 +243,7 @@ namespace ExcelDownloader
                     }
                     break;
                 default:
-                    ws.Cells[row, column] = jToken.ToString();
+                    ws.Cells[row, column] = jToken.ToString(); ;
                     break;
             }
             return result;
@@ -296,14 +290,18 @@ namespace ExcelDownloader
         }
         private void DownloadExcel(JArray jArray)
         {
+            Console.WriteLine("DownloadExcel Start");
             for (int i = 0; i < jArray.Count; i++)
             {
+                Console.WriteLine(i);
                 JToken jToken = jArray[i];
                 var jObject = (JObject)jToken;
                 if (i == 0)
                 {
+                    Console.WriteLine("WriteHeader Start");
                     WriteHeader(jObject);
                 }
+                
                 DownloadExcel(jObject);
                 height = nextHeight + 1;
             }
@@ -316,6 +314,7 @@ namespace ExcelDownloader
             int addValue = 1;
             for (int i = 0; i < tokens.Count; i++)
             {
+                Console.WriteLine($"WriteBody [{i}] Start");
                 int res = WriteBody(tokens[i], height, i + addValue);
                 addValue += res;
             }

@@ -5,6 +5,8 @@ VisualStudioVersion = 16.0.33927.289
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ExcelDownloader", "ExcelDownloader\ExcelDownloader.csproj", "{63BB8C79-63F9-49ED-984F-D8014FB55989}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CategoryDownloader", "..\..\2017\CategoryDownloader\CategoryDownloader\CategoryDownloader.csproj", "{4D890C33-CFAB-47DB-A886-EE170D85EA08}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -15,6 +17,10 @@ Global
 		{63BB8C79-63F9-49ED-984F-D8014FB55989}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{63BB8C79-63F9-49ED-984F-D8014FB55989}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{63BB8C79-63F9-49ED-984F-D8014FB55989}.Release|Any CPU.Build.0 = Release|Any CPU
+		{4D890C33-CFAB-47DB-A886-EE170D85EA08}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{4D890C33-CFAB-47DB-A886-EE170D85EA08}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{4D890C33-CFAB-47DB-A886-EE170D85EA08}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{4D890C33-CFAB-47DB-A886-EE170D85EA08}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
